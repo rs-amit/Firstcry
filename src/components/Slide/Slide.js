@@ -6,7 +6,6 @@ import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 const Container = styled.div`
   width: 100%;
   display: flex;
-  /* aspect-ratio: 16/8; */
   position: relative;
   overflow: hidden;
   @media screen and (max-width: 1200px) {
