@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import ClipLoader from "react-spinners/ClipLoader";
 import {LoginUser} from "../../redux/Api"
+import Swal from "sweetalert2";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -87,6 +89,9 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { currentUser, error, isFetching } = useSelector((state) => state.user);
 
   const ShowPasswordToggle = () => {
     if (showPasswordToggle) {
@@ -102,14 +107,26 @@ function Login() {
   };
 
 
-// const getUser = () => {
-//   dispatch(
-//     addUser({
-//      userName : userName,
-//      password : password
-//     })
-//   );
-// };
+  const isEmpty = () => {
+    return !userName || !password 
+   }
+
+  useEffect(() => {
+    if (currentUser) {
+      setPassword("");
+      setUserName("");
+      navigate("/");
+    }
+    if (error) {
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "Something went wrong, please try again later",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }, [currentUser, error]);
 
   const LoginGuest = () => {
     setUserName("admin");
@@ -144,7 +161,9 @@ function Login() {
             By continuing, you agree to Firstcry's Conditions of Use and Privacy
             Notice.
           </PrivacyAgreement>
-          <SubmitBtn type="Submit">LOGIN</SubmitBtn>
+          <SubmitBtn type="Submit" disabled = {isFetching || isEmpty()}>
+          {isFetching ? <ClipLoader color="white" size={15} /> : "LOGIN"}
+         </SubmitBtn>
         </LoginForm>
         <AccountConfirmation>
           DO YOU HAVE A ACCOUNT? <Link to="/register"> SignUp</Link>

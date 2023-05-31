@@ -3,12 +3,34 @@ import "./Header.css";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../redux/UserRducer";
+import Swal from "sweetalert2";
 
 function Header() {
-  const cart = useSelector((state) => state.cart);
+
+  const dispatch = useDispatch();
+  const { cart, user } = useSelector((state) => state);
   console.log(cart);
   const { products } = cart;
+
+  const LogoutHandler = () => {
+    if (user.currentUser) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to logout",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Logout",
+        allowOutsideClick: () => !Swal.isLoading(),
+        preConfirm: () => {
+          dispatch(logout());
+        },
+      });
+    }
+  };
 
   return (
     <div className="header">
@@ -38,7 +60,7 @@ function Header() {
             <div className="nav">Support</div>
             <div className="nav">Track Order</div>
             <div className="nav">FirstCry Parenting</div>
-            <Link to="/login" style={{ textDecoration: "none", color: "black" }}> <div className="nav">Login / Register</div> </Link>
+            <Link to="/login" style={{ textDecoration: "none", color: "black" }}> <div className="nav" onClick={LogoutHandler}>Login / Register</div> </Link>
           </div>
           <Link to="/carts" style={{ textDecoration: "none", color: "black" }}>
             <div className="cart-nav">
