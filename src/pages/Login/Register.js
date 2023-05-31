@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import axios from "axios";
 
