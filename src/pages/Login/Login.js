@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import ClipLoader from "react-spinners/ClipLoader";
-import {LoginUser} from "../../redux/Api"
+import { LoginUser } from "../../redux/Api";
 import Swal from "sweetalert2";
 
 const LoginContainer = styled.div`
@@ -62,6 +62,7 @@ const ShowPassword = styled.div`
   position: absolute;
   top: 36px;
   right: 10px;
+  cursor: pointer;
 `;
 
 const AccountConfirmation = styled.div`
@@ -106,10 +107,9 @@ function Login() {
     LoginUser(dispatch, { userName, password });
   };
 
-
   const isEmpty = () => {
-    return !userName || !password 
-   }
+    return !userName || !password;
+  };
 
   useEffect(() => {
     if (currentUser) {
@@ -136,22 +136,30 @@ function Login() {
   return (
     <LoginContainer>
       <LoginWrapper>
-        <LoginLogo>
-          <Logo
-            src="https://cdn.fcglcdn.com/brainbees/images/n/fc-logo-s.jpg"
-            alt=""
-          />
-        </LoginLogo>
+        <Link to="/">
+          <LoginLogo>
+            <Logo
+              src="https://cdn.fcglcdn.com/brainbees/images/n/fc-logo-s.jpg"
+              alt=""
+            />
+          </LoginLogo>
+        </Link>
         <LoginForm onSubmit={getUser}>
           <InputSection>
             <InputLabel>USERNAME</InputLabel>
-            <InputField type="text" value={userName} />
+            <InputField
+              placeholder="username"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
           </InputSection>
           <InputSection>
             <InputLabel>PASSWORD</InputLabel>
             <InputField
               type={showPasswordToggle ? "text" : "password"}
+              placeholder="password"
               value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <ShowPassword onClick={ShowPasswordToggle}>
               {showPasswordToggle ? "HIDE" : "SHOW"}
@@ -161,9 +169,9 @@ function Login() {
             By continuing, you agree to Firstcry's Conditions of Use and Privacy
             Notice.
           </PrivacyAgreement>
-          <SubmitBtn type="Submit" disabled = {isFetching || isEmpty()}>
-          {isFetching ? <ClipLoader color="white" size={15} /> : "LOGIN"}
-         </SubmitBtn>
+          <SubmitBtn type="Submit" disabled={isFetching || isEmpty()}>
+            {isFetching ? <ClipLoader color="white" size={15} /> : "LOGIN"}
+          </SubmitBtn>
         </LoginForm>
         <AccountConfirmation>
           DO YOU HAVE A ACCOUNT? <Link to="/register"> SignUp</Link>

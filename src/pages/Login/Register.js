@@ -1,7 +1,7 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import axios from "axios";
 
@@ -10,7 +10,6 @@ const RegisterContainer = styled.div`
   height: 100vh;
   align-items: center;
   justify-content: center;
-
 `;
 const RegisterWrapper = styled.div`
   max-width: 300px;
@@ -68,100 +67,119 @@ const PrivacyAgreement = styled.div`
   color: #a3a2a2;
 `;
 
+const AccountConfirmation = styled.div`
+  font-size: 13px;
+  color: #696868;
+  margin-bottom: 10px;
+`;
+
 function Registered() {
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isFetching, setIsfetching] = useState(false);
+  const [showPasswordToggle, setShowPasswordToggle] = useState(false);
 
-    const [ userName, setUserName ] = useState("")
-    const [ email, setEmail ] = useState("")
-    const [ password, setPassword ] = useState("")
-    const [ isFetching, setIsfetching ] = useState(false)
-    const [showPasswordToggle, setShowPasswordToggle] = useState(false);
-  
-    const navigate = useNavigate();
-  
-    const SubmitClickHandler=async(e)=>{
-      e.preventDefault();
-      setIsfetching(true)
-      await axios.post("https://mybasket-server.jerryroy.repl.co/api/auth/register", {
-          username:userName,
-          email:email,
-          password:password,
-      } ).then((response)=>{
-          console.log(response.data)
-          setUserName("")
-          setEmail("")
-          setPassword("")
-          Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: 'Your account has been saved',
-              showConfirmButton: false,
-              timer: 1500
-            })  
-            navigate("/login");        
-          
-      }).catch((error)=>{
-          console.error(error)
-          Swal.fire({
-              position: 'top-end',
-              icon: 'error',
-              title: 'Something went wrong, please try again later',
-              showConfirmButton: false,
-              timer: 1500
-            })
-      }).finally(()=>{
-          setIsfetching(false)
+  const navigate = useNavigate();
+
+  const SubmitClickHandler = async (e) => {
+    e.preventDefault();
+    setIsfetching(true);
+    await axios
+      .post("https://mybasket-server.jerryroy.repl.co/api/auth/register", {
+        username: userName,
+        email: email,
+        password: password,
       })
-    }
+      .then((response) => {
+        console.log(response.data);
+        setUserName("");
+        setEmail("");
+        setPassword("");
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your account has been saved",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Something went wrong, please try again later",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .finally(() => {
+        setIsfetching(false);
+      });
+  };
 
-    const isEmpty = () => {
-        return !userName || !password || !email
+  const isEmpty = () => {
+    return !userName || !password || !email;
+  };
+
+  const ShowPasswordToggle = () => {
+    if (showPasswordToggle) {
+      setShowPasswordToggle(false);
+    } else {
+      setShowPasswordToggle(true);
     }
-    
-    const ShowPasswordToggle = () =>{
-        if(showPasswordToggle){
-          setShowPasswordToggle(false)
-        }else{
-          setShowPasswordToggle(true)
-          
-        }
-      }
-      
+  };
+
   return (
     <RegisterContainer>
       <RegisterWrapper>
-        <RegisterLogo>
-          <Logo
-            src="https://cdn.fcglcdn.com/brainbees/images/n/fc-logo-s.jpg"
-            alt=""
-          />
-        </RegisterLogo>
+        <Link to="/">
+          <RegisterLogo>
+            <Logo
+              src="https://cdn.fcglcdn.com/brainbees/images/n/fc-logo-s.jpg"
+              alt=""
+            />
+          </RegisterLogo>
+        </Link>
         <RegisterForm onSubmit={SubmitClickHandler}>
           <InputSection>
             <InputLabel>USERNAME</InputLabel>
             <InputField
-                type="text"   
-                placeholder="username"
-                value={userName}
-                onChange={(e)=>setUserName(e.target.value)}/>
+              type="text"
+              placeholder="username"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
           </InputSection>
           <InputSection>
             <InputLabel>EMAIL</InputLabel>
-            <InputField 
-                placeholder="email"
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}/>
+            <InputField
+              placeholder="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </InputSection>
           <InputSection>
             <InputLabel>PASSWORD</InputLabel>
-            <InputField   
-                placeholder="password"
-                value={password}
-                type={showPasswordToggle ? "text" : "password"}
-                onChange={(e)=>setPassword(e.target.value)} />
-            <ShowPassword onClick={ShowPasswordToggle}>{showPasswordToggle? "HIDE" :"SHOW"}</ShowPassword>
+            <InputField
+              placeholder="password"
+              value={password}
+              type={showPasswordToggle ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <ShowPassword onClick={ShowPasswordToggle}>
+              {showPasswordToggle ? "HIDE" : "SHOW"}
+            </ShowPassword>
           </InputSection>
-          <SubmitBtn type="Submit" disabled = {isFetching || isEmpty()}>{isFetching ? <ClipLoader color='white' size={15}/> :  "REGISTER" }</SubmitBtn>
+          <SubmitBtn type="Submit" disabled={isFetching || isEmpty()}>
+            {isFetching ? <ClipLoader color="white" size={15} /> : "REGISTER"}
+          </SubmitBtn>
         </RegisterForm>
+        <AccountConfirmation>
+          DO YOU HAVE A ACCOUNT? <Link to="/login"> SIGNIN</Link>
+        </AccountConfirmation>
         <PrivacyAgreement>
           By continuing, you agree to Firstcry's Conditions of Use and Privacy
           Notice.
