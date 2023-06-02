@@ -52,6 +52,7 @@ const Button = styled.button`
   background-color: #ff7043;
   color: white;
   border-radius: 5px;
+  cursor: pointer;
 `;
 
 function Product({ product }) {
